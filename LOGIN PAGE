@@ -1,0 +1,212 @@
+
+
+import javax.swing.*;
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+public class Login_Application extends javax.swing.JFrame        
+{
+    public  Login_Application() {
+        initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+    }
+    private void initComponents() {
+
+        LOG2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        username = new javax.swing.JTextField();
+        password = new javax.swing.JPasswordField();
+        loginb = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        show_pass = new javax.swing.JCheckBox();
+        jLabel2 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
+        getContentPane().setLayout(null);
+
+        LOG2.setFont(new java.awt.Font("Script MT Bold", 1, 36)); // NOI18N
+        LOG2.setForeground(new java.awt.Color(153, 102, 0));
+        LOG2.setText("Username  :");
+        getContentPane().add(LOG2);
+        LOG2.setBounds(520, 490, 206, 63);
+
+        jLabel4.setFont(new java.awt.Font("Script MT Bold", 0, 36)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel4.setText("Password  :");
+        getContentPane().add(jLabel4);
+        jLabel4.setBounds(510, 620, 206, 51);
+
+        username.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                usernameActionPerformed(evt);
+            }
+        });
+        getContentPane().add(username);
+        username.setBounds(900, 500, 208, 53);
+        password.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passwordActionPerformed(evt);
+            }
+        });
+        getContentPane().add(password);
+        password.setBounds(900, 620, 208, 51);
+
+        loginb.setFont(new java.awt.Font("Stencil", 1, 48)); // NOI18N
+        loginb.setForeground(new java.awt.Color(153, 102, 0));
+        loginb.setText("LOGIN ");
+        loginb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginbActionPerformed(evt);
+            }
+        });
+        getContentPane().add(loginb);
+        loginb.setBounds(710, 810, 190, 70);
+
+        jLabel1.setBackground(new java.awt.Color(153, 102, 0));
+        jLabel1.setFont(new java.awt.Font("Rockwell Condensed", 1, 48)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("LOGIN");
+        jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(710, 370, 175, 60);
+
+        show_pass.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        show_pass.setForeground(new java.awt.Color(153, 102, 0));
+        show_pass.setText("show password");
+        show_pass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                show_passActionPerformed(evt);
+            }
+        });
+        getContentPane().add(show_pass);
+        show_pass.setBounds(910, 730, 130, 24);
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/SELVAA TRADERS final.png"))); // NOI18N
+        jLabel2.setText("jLabel2");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(0, 0, 1650, 1080);
+
+        pack();
+    }// </editor-fold>                        
+
+    private void passwordActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    }                                        
+
+    private void loginbActionPerformed(java.awt.event.ActionEvent evt) {                                       
+        if(username.getText().equals(""))
+        {
+            JOptionPane.showMessageDialog(null,"please fill out your username:");
+        }
+        else if(password.getText().equals(""))
+        {
+            JOptionPane.showMessageDialog(null,"please fill out your password");
+        }
+        else if(username.getText().contains("selvaseenivasan")&&password.getText().contains("1234"))
+        {
+            JOptionPane.showMessageDialog(null,"login successful"); 
+            HOMEPAGE hp=new HOMEPAGE();
+            hp.setVisible(true);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null,"wrong username or password!!!!","message",JOptionPane.ERROR_MESSAGE);
+        }  
+        String usernameText = username.getText();
+        String passwordText = new String(password.getPassword());
+
+      
+        if (usernameText.isEmpty() || passwordText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Username and password cannot be empty!");
+        }
+    System.out.println("Login button clicked!");  
+    String url = "jdbc:mysql://localhost:3306/SELVAA_TRADERS";
+    String dbUsername = "root";
+    String dbPassword = "Shreyaanivas@09";
+    String query = "SELECT * FROM admin WHERE user_id = ? AND password = ?";
+
+    try {
+        Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword);
+        PreparedStatement pst = conn.prepareStatement(query);
+        String usernameText = username.getText();
+        String passwordText = new String(password.getPassword());
+        if (usernameText.isEmpty() || passwordText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Username and password cannot be empty!");
+            return;
+        }
+        pst.setString(1, usernameText);
+        pst.setString(2, passwordText);
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+            JOptionPane.showMessageDialog(null, "Login successful!");
+            HOMEPAGE homepage = new HOMEPAGE();
+            homepage.setVisible(true);
+            dispose(); // Close the login window
+        } else {
+         
+            JOptionPane.showMessageDialog(null, "Invalid username or password.");
+        }
+        rs.close();
+        pst.close();
+        conn.close();
+    } catch (Exception e) {
+       
+        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        e.printStackTrace(); // Print the error stack trace for debugging
+    }
+    }                                      
+
+    private void usernameActionPerformed(java.awt.event.ActionEvent evt) {                                         
+
+    }                                        
+
+    private void show_passActionPerformed(java.awt.event.ActionEvent evt) {                                          
+        
+        if(show_pass.isSelected())
+        {
+            password.setEchoChar((char)0);
+        }
+        else
+        {
+            password.setEchoChar('*');
+        }        
+
+    }                                         
+
+
+
+   public static void main(String args[]) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(HOMEPAGE.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+    public void run() {
+        new Login_Application().setVisible(true);
+    }
+});
+    java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+            new Login_Application().setVisible(true); // This will initialize the frame and make it visible
+        }
+    });
+}                    
+    private javax.swing.JLabel LOG2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JButton loginb;
+    private javax.swing.JPasswordField password;
+    private javax.swing.JCheckBox show_pass;
+    private javax.swing.JTextField username;
+}
