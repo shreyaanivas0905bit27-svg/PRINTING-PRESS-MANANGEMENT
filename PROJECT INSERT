@@ -1,0 +1,191 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
+import javax.swing.JOptionPane;
+import java.sql.*;
+public class ADD_MATERIAL extends javax.swing.JFrame {
+    public ADD_MATERIAL() {
+        initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+    }
+    private void initComponents() {
+
+        jLabel4 = new javax.swing.JLabel();
+        material_cost = new javax.swing.JTextField();
+        INSERT = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        product = new javax.swing.JTextField();
+        MATNAME = new javax.swing.JTextField();
+        INSERT1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(null);
+
+        jLabel4.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel4.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("MATERIAL COST");
+        getContentPane().add(jLabel4);
+        jLabel4.setBounds(480, 540, 230, 32);
+        getContentPane().add(material_cost);
+        material_cost.setBounds(950, 540, 284, 34);
+
+        INSERT.setFont(new java.awt.Font("Rockwell Condensed", 1, 48)); 
+        INSERT.setForeground(new java.awt.Color(153, 102, 0));
+        INSERT.setText("INSERT");
+        INSERT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                INSERTActionPerformed(evt);
+            }
+        });
+        getContentPane().add(INSERT);
+        INSERT.setBounds(940, 650, 270, 70);
+
+        jLabel5.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel5.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("PRODUCT NAME");
+        getContentPane().add(jLabel5);
+        jLabel5.setBounds(490, 380, 210, 32);
+
+        jLabel6.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel6.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("MATERIAL NAME");
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(500, 460, 210, 32);
+        getContentPane().add(product);
+        product.setBounds(950, 380, 284, 34);
+        getContentPane().add(MATNAME);
+        MATNAME.setBounds(950, 460, 284, 34);
+
+        INSERT1.setFont(new java.awt.Font("Rockwell Condensed", 1, 48)); 
+        INSERT1.setForeground(new java.awt.Color(153, 102, 0));
+        INSERT1.setText("BACK");
+        INSERT1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                INSERT1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(INSERT1);
+        INSERT1.setBounds(500, 650, 270, 70);
+
+        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\shrey\\Downloads\\SELVAA TRADERS (14).png")); 
+        jLabel1.setText("jLabel1");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(0, -40, 1590, 1150);
+
+        pack();
+} 
+
+    private void INSERTActionPerformed(java.awt.event.ActionEvent evt) {                                       
+    String proname=product.getText().trim();
+    String materialName = MATNAME.getText().trim();   
+    String materialCost = material_cost.getText().trim();    
+    if (materialName.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Material name cannot be empty!");
+        return;
+    }
+
+    if (materialCost.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Material cost cannot be empty!");
+        return;
+    }
+
+    try {
+        double cost = Double.parseDouble(materialCost);
+        if (cost <= 0) {
+            JOptionPane.showMessageDialog(this, "Material cost must be a positive number!");
+            return;
+        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Material cost must be a valid number!");
+        return;
+    }
+    String url = "jdbc:mysql://localhost:3306/SELVAA_TRADERS";
+    String dbUser = "root";
+    String dbPassword = "Shreyaanivas@09";
+
+    try {
+        Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
+
+        String checkSql = "SELECT * FROM material WHERE MATERIAL_NAME = ? AND PRODUCT_NAME=?";
+        PreparedStatement checkPst = conn.prepareStatement(checkSql);
+        checkPst.setString(1, materialName);
+        checkPst.setString(2, proname);
+        ResultSet rs = checkPst.executeQuery();
+        if (rs.next()) {
+            JOptionPane.showMessageDialog(this, "Material name already exists!");
+            rs.close();
+            checkPst.close();
+            conn.close();
+            return;
+        }
+        rs.close();
+        checkPst.close();
+        String insertSql = "INSERT INTO material (MATERIAL_NAME, MATERIAL_COST,PRODUCT_NAME) VALUES (?, ?,?)";
+        PreparedStatement pst = conn.prepareStatement(insertSql);
+
+        pst.setString(1, materialName);
+        pst.setDouble(2, Double.parseDouble(materialCost)); 
+        pst.setString(3, proname);
+
+        int rowsInserted = pst.executeUpdate();
+
+        if (rowsInserted > 0) {
+            JOptionPane.showMessageDialog(this, "Material inserted successfully!");
+            
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to insert material.");
+        }
+
+        pst.close();
+        conn.close();
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error while inserting material: " + e.getMessage());
+    }
+
+    }                                      
+
+    private void INSERT1ActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        MATERIAL D= new MATERIAL();
+D.setVisible(true);  
+    }                                       
+    public static void main(String args[]) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ADD_MATERIAL.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ADD_MATERIAL.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ADD_MATERIAL.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ADD_MATERIAL.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ADD_MATERIAL().setVisible(true);
+            }
+        });
+    }
+    private javax.swing.JButton INSERT;
+    private javax.swing.JButton INSERT1;
+    private javax.swing.JTextField MATNAME;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JTextField material_cost;
+    private javax.swing.JTextField product;
+}
+
