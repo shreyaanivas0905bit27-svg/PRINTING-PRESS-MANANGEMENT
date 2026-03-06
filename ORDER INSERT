@@ -1,0 +1,239 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
+import javax.swing.JOptionPane;
+import java.sql.*;
+public class ADD_ORDER extends javax.swing.JFrame {
+    public ADD_ORDER() {
+        initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+    String[] productOptions = { 
+        "INVITATION_CARDS", 
+        "CARDBOARD_BOXES", 
+        "PRICE_TAGS", 
+        "BAGS", 
+        "DIARY", 
+        "CALENDARS", 
+        "DAILY_SHEET"
+    };
+    PRODUCT.setModel(new javax.swing.DefaultComboBoxModel<>(productOptions));
+    PRODUCT.setSelectedItem("INVITATION_CARDS"); 
+    java.time.LocalDate currentDate = java.time.LocalDate.now();
+    order_date.setText(currentDate.toString());
+    order_date.setEditable(false);
+}
+    private void initComponents() {
+
+        popupMenu1 = new java.awt.PopupMenu();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        no_of_products = new javax.swing.JTextField();
+        order_deadline = new javax.swing.JTextField();
+        order_total = new javax.swing.JTextField();
+        order_date = new javax.swing.JTextField();
+        order_name = new javax.swing.JTextField();
+        insert = new javax.swing.JButton();
+        BACK = new javax.swing.JButton();
+        PRODUCT = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+        popupMenu1.setLabel("popupMenu1");
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jLabel2.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel2.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("ORDER NAME");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 390, 200, -1));
+
+        jLabel3.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel3.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("PRODUCT NAME");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 450, 210, -1));
+
+        jLabel4.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel4.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("PRODUCT COUNT");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 510, 250, -1));
+
+        jLabel6.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel6.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("DATE");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 330, 166, -1));
+
+        jLabel7.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel7.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("DEADLINE");
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 570, 166, -1));
+
+        jLabel9.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel9.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel9.setText("TOTAL COST");
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 630, 166, -1));
+        getContentPane().add(no_of_products, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 500, 284, 40));
+        getContentPane().add(order_deadline, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 560, 284, 40));
+        getContentPane().add(order_total, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 620, 284, 40));
+        getContentPane().add(order_date, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 320, 284, 40));
+        getContentPane().add(order_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 380, 284, 40));
+
+        insert.setFont(new java.awt.Font("Rockwell Condensed", 1, 48)); 
+        insert.setForeground(new java.awt.Color(153, 102, 0));
+        insert.setText("INSERT");
+        insert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                insertActionPerformed(evt);
+            }
+        });
+        getContentPane().add(insert, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 720, 270, 59));
+        BACK.setFont(new java.awt.Font("Rockwell Condensed", 1, 48)); 
+        BACK.setForeground(new java.awt.Color(153, 102, 0));
+        BACK.setText("BACK");
+        BACK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BACKActionPerformed(evt);
+            }
+        });
+        getContentPane().add(BACK, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 700, 270, 59));
+
+        PRODUCT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PRODUCTActionPerformed(evt);
+            }
+        });
+        getContentPane().add(PRODUCT, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 440, 280, 40));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\shrey\\Downloads\\SELVAA TRADERS (7).png")); 
+        jLabel1.setText("jLabel1");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-50, -20, 1620, 1120));
+
+        getAccessibleContext().setAccessibleName("SCDS");
+
+        pack();
+    }
+
+    private void insertActionPerformed(java.awt.event.ActionEvent evt) {                                       
+String orderDate = order_date.getText();
+    String orderName = order_name.getText();
+    String productName = (String) PRODUCT.getSelectedItem();
+    String noOfProducts = no_of_products.getText();
+    String deadline = order_deadline.getText();
+    String totalAmount = order_total.getText();
+    java.util.Date currentDate = new java.util.Date();
+    java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd");
+    String currentDateString = dateFormat.format(currentDate);
+    if (deadline.compareTo(currentDateString) < 0) {
+        JOptionPane.showMessageDialog(this, "Deadline cannot be before the current date.");
+        return;
+    }
+    
+    try {
+        String checkDuplicateQuery = "SELECT * FROM orders WHERE PRODUCT_NAME = ? AND NO_OF_PRODUCTS = ? AND DATE = ?";
+        String url = "jdbc:mysql://localhost:3306/SELVAA_TRADERS"; 
+        String dbUser = "root"; // Your database username
+        String dbPassword = "Shreyaanivas@09";
+       Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
+       PreparedStatement pst = conn.prepareStatement(checkDuplicateQuery);
+        pst.setString(1, productName);
+        pst.setString(2, noOfProducts);
+        pst.setString(3, orderDate);
+
+        
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+            JOptionPane.showMessageDialog(this, "This order already exists for the same product, count, and order date.");
+            rs.close();
+            pst.close();
+            conn.close();
+            return; 
+        }
+
+        rs.close();
+        pst.close();
+
+        
+        String sql = "INSERT INTO orders (DATE, ORDER_NAME, PRODUCT_NAME, NO_OF_PRODUCTS, DEADLINE, TOTAL) VALUES (?, ?, ?, ?, ?, ?)";
+
+        
+        pst = conn.prepareStatement(sql);
+
+        pst.setString(1, orderDate);       
+        pst.setString(2, orderName);
+        pst.setString(3, productName);
+        pst.setString(4, noOfProducts);    
+        pst.setString(5, deadline);
+        pst.setString(6, totalAmount);     
+        int rowsAffected = pst.executeUpdate();
+
+       
+        if (rowsAffected > 0) {
+            JOptionPane.showMessageDialog(this, "Order inserted successfully!");
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to insert order.");
+        }
+
+        
+        pst.close();
+        conn.close();
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error occurred while inserting order data: " + e.getMessage());
+    }                  
+    }                                      
+
+    private void BACKActionPerformed(java.awt.event.ActionEvent evt) {                                     
+         ORDERS HP=new ORDERS()
+HP.setVisible(true);
+    }                                    
+
+    private void PRODUCTActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        
+    }                                       
+    public static void main(String args[]) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ADD_ORDER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ADD_ORDER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ADD_ORDER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ADD_ORDER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ADD_ORDER().setVisible(true);
+            }
+        });
+    }
+    private javax.swing.JButton BACK;
+    private javax.swing.JComboBox<String> PRODUCT;
+    private javax.swing.JButton insert;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JTextField no_of_products;
+    private javax.swing.JTextField order_date;
+    private javax.swing.JTextField order_deadline;
+    private javax.swing.JTextField order_name;
+    private javax.swing.JTextField order_total;
+    private java.awt.PopupMenu popupMenu1;
+}
