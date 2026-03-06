@@ -1,0 +1,171 @@
+import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import java.sql.DriverManager;
+import java.sql.Connection;
+import javax.swing.table.DefaultTableModel;
+public class DISPLAY_COURIER extends javax.swing.JFrame {
+    public DISPLAY_COURIER() {
+        initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+    }
+    private void initComponents() {
+
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jButton4 = new javax.swing.JButton();
+        SEARCH = new javax.swing.JTextField();
+        jButton5 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "NO", "AGENCY", "CHARGE", "NAME", "ADDRESS"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 370, 1185, 400));
+
+        jButton4.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(153, 102, 0));
+        jButton4.setText("FETCH");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 790, 130, 50));
+
+        SEARCH.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SEARCHActionPerformed(evt);
+            }
+        });
+        getContentPane().add(SEARCH, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 330, 460, -1));
+
+        jButton5.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); 
+        jButton5.setForeground(new java.awt.Color(153, 102, 0));
+        jButton5.setText("BACK");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 790, 130, 50));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\shrey\\Downloads\\SELVAA TRADERS (10).png")); 
+        jLabel1.setText("jLabel1");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        pack();
+    }
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+
+        String courierAgency = SEARCH.getText().trim(); 
+
+String url = "jdbc:mysql://localhost:3306/SELVAA_TRADERS";
+String dbUser = "root";
+String dbPassword = "Shreyaanivas@09";
+
+try {
+    Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
+    PreparedStatement pst;
+
+    if (courierAgency.isEmpty()) {
+        pst = conn.prepareStatement("SELECT * FROM COURIER");
+    } else {
+        pst = conn.prepareStatement("SELECT * FROM COURIER WHERE COURIER_NO LIKE ?");
+        pst.setString(1, "%" + courierAgency + "%");
+    }
+
+    ResultSet rs = pst.executeQuery();
+
+    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+    model.setRowCount(0); 
+
+    boolean found = false;
+    while (rs.next()) {
+        found = true;
+        model.addRow(new Object[]{
+            rs.getString("COURIER_NO"),
+            rs.getString("COURIER_AGENCY"),
+            rs.getString("COURIER_CHARGE"),
+            rs.getString("PARCEL_NAZME"),
+            rs.getString("PARCEL_ADDRESS")
+        });
+    }
+
+    if (!found && !courierAgency.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "No courier found for agency: " + courierAgency);
+    }
+
+    rs.close();
+    pst.close();
+    conn.close();
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+}
+
+    }                                        
+
+    private void SEARCHActionPerformed(java.awt.event.ActionEvent evt) {                                       
+  
+    }                                      
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+COURIER HP=new COURIER();
+        HP.setVisible(true);    
+        
+    }                                        
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(DISPLAY_COURIER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(DISPLAY_COURIER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(DISPLAY_COURIER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(DISPLAY_COURIER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new DISPLAY_COURIER().setVisible(true);
+            }
+        });
+    }
+    private javax.swing.JTextField SEARCH;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
+    void setvisible(boolean b) {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
+}
