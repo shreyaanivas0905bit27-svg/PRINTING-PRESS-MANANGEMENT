@@ -1,0 +1,129 @@
+
+import javax.swing.JOptionPane;
+import java.sql.DriverManager;
+import java.sql.*;
+import java.sql.Connection;
+public class DEL_SALES extends javax.swing.JFrame {
+    public DEL_SALES() {
+        initComponents();
+         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+    }
+
+    private void initComponents() {
+
+        jLabel3 = new javax.swing.JLabel();
+        id = new javax.swing.JTextField();
+        delete = new javax.swing.JButton();
+        delete1 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel3.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel3.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("BILL NO");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 500, 166, -1));
+        getContentPane().add(id, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 490, 284, 34));
+
+        delete.setFont(new java.awt.Font("Rockwell Condensed", 1, 48)); 
+        delete.setForeground(new java.awt.Color(153, 102, 0));
+        delete.setText("DELETE");
+        delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteActionPerformed(evt);
+            }
+        });
+        getContentPane().add(delete, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 660, 270, 70));
+        delete1.setFont(new java.awt.Font("Rockwell Condensed", 1, 48)); 
+        delete1.setForeground(new java.awt.Color(153, 102, 0));
+        delete1.setText("BACK");
+        delete1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delete1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(delete1, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 660, 270, 70));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\shrey\\Downloads\\SELVAA TRADERS (15).png")); 
+        jLabel2.setText("jLabel2");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-20, -50, 1940, 1170));
+
+        pack();
+    } 
+private void deleteActionPerformed(java.awt.event.ActionEvent evt) {                                       
+        String billno = id.getText();
+        if (billno.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter the bill no to delete.");
+            return;
+        }
+        String empId = null;
+  int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete sales with bill no: " + billno + "?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        String url = "jdbc:mysql://localhost:3306/SELVAA_TRADERS";
+        String dbUser = "root";
+        String dbPassword = "Shreyaanivas@09";
+
+        String sql = "DELETE FROM SALES WHERE BILL_NO = ?";
+
+        try {
+            Connection conn;
+            conn = DriverManager.getConnection(url, dbUser, dbPassword);
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, billno);
+
+            int rowsDeleted = pst.executeUpdate();
+            if (rowsDeleted > 0) {
+                JOptionPane.showMessageDialog(this, "sales deleted successfully.");
+
+            } else {
+                JOptionPane.showMessageDialog(this, "No sales found with bill no: " + billno);
+            }
+
+            pst.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error deleting order: " + e.getMessage());
+        }
+    }                                      
+
+    private void delete1ActionPerformed(java.awt.event.ActionEvent evt) {                                        
+         SALES S= new SALES();
+S.setVisible(true); 
+    }                                       
+    public static void main(String args[]) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(DEL_SALES.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(DEL_SALES.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(DEL_SALES.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(DEL_SALES.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new DEL_SALES().setVisible(true);
+            }
+        });
+    }
+    private javax.swing.JButton delete;
+    private javax.swing.JButton delete1;
+    private javax.swing.JTextField id;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+}
+
