@@ -1,0 +1,177 @@
+import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import java.sql.DriverManager;
+import java.sql.Connection;
+import javax.swing.table.DefaultTableModel;
+public class DISPLAY_SALES extends javax.swing.JFrame {
+
+    public DISPLAY_SALES() {
+        initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+    }
+
+    private void initComponents() {
+
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        SNDI = new javax.swing.JButton();
+        SEARCH = new javax.swing.JTextField();
+        SNDI1 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "BILL_NO", "DATE", "CUST_ID", "CUST_NAME", "PHONE NO", "PRODUCT_NAME", "MATERIAL", "PAGES", "COST_PER_PIECE", "TOTAL_COST", "SPECIFICATION"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 350, 1185, 400));
+
+        SNDI.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); 
+        SNDI.setForeground(new java.awt.Color(153, 102, 0));
+        SNDI.setText("FETCH");
+        SNDI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SNDIActionPerformed(evt);
+            }
+        });
+        getContentPane().add(SNDI, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 770, 130, 50));
+        SEARCH.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SEARCHActionPerformed(evt);
+            }
+        });
+        getContentPane().add(SEARCH, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 300, 460, -1));
+        SNDI1.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
+        SNDI1.setForeground(new java.awt.Color(153, 102, 0));
+        SNDI1.setText("BACK");
+        SNDI1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SNDI1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(SNDI1, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 770, 130, 50));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\shrey\\Downloads\\SELVAA TRADERS (15).png")); 
+        jLabel2.setText("jLabel2");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-20, -40, 1940, 1170));
+
+        pack();
+    }
+    private void SNDIActionPerformed(java.awt.event.ActionEvent evt) {                                     
+ String billno = SEARCH.getText().trim(); // Assuming you have a searchField
+
+String url = "jdbc:mysql://localhost:3306/SELVAA_TRADERS";
+String dbUser = "root";
+String dbPassword = "Shreyaanivas@09";
+
+try {
+    Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
+    PreparedStatement pst;
+
+    if (billno.isEmpty()) {
+        pst = conn.prepareStatement("SELECT * FROM SALES");
+    } else {
+        pst = conn.prepareStatement("SELECT * FROM SALES WHERE BILL_NO LIKE ?");
+        pst.setString(1, "%" + billno + "%");
+    }
+
+    ResultSet rs = pst.executeQuery();
+
+    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+    model.setRowCount(0); 
+
+    boolean found = false;
+    while (rs.next()) {
+        found = true;
+        model.addRow(new Object[]{
+            rs.getString("BILL_NO"),
+            rs.getString("DATE"),
+            rs.getString("CUST_ID"),
+            rs.getString("CUST_NAME"),
+            rs.getString("PHONE_NO"),
+            rs.getString("PRODUCT_NAME"),
+            rs.getString("MATERIAL"),
+            rs.getString("PAGES"),
+            rs.getString("COST_PER_PIECE"),
+            rs.getString("TOTAL_COST"),
+            rs.getString("ORDER_SPECIFICATION")
+        });
+    }
+
+    if (!found && !billno.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "No sales records found for: " + billno);
+    }
+
+    rs.close();
+    pst.close();
+    conn.close();
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+}
+
+    }                                    
+
+    private void SEARCHActionPerformed(java.awt.event.ActionEvent evt) {                                       
+        // TODO add your handling code here:
+    }                                      
+
+    private void SNDI1ActionPerformed(java.awt.event.ActionEvent evt) {                                      
+        // TODO add your handling code here:
+         SALES S= new SALES();
+S.setVisible(true); 
+    }                                     
+    public static void main(String args[]) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(DISPLAY_SALES.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(DISPLAY_SALES.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(DISPLAY_SALES.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(DISPLAY_SALES.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new DISPLAY_SALES().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify                     
+    private javax.swing.JTextField SEARCH;
+    private javax.swing.JButton SNDI;
+    private javax.swing.JButton SNDI1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
+    // End of variables declaration                   
+}
+
