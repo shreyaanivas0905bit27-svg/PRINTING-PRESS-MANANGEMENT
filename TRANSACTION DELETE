@@ -1,0 +1,292 @@
+import javax.swing.JOptionPane;
+import java.sql.DriverManager;
+import java.sql.*;
+import java.sql.Connection;
+
+public class DEL_MATERIAL extends javax.swing.JFrame {
+    public DEL_MATERIAL() {
+        initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+    }
+    private void initComponents() {
+
+        jLabel3 = new javax.swing.JLabel();
+        NAME = new javax.swing.JTextField();
+        delete = new javax.swing.JButton();
+        delete1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel3.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("NAME");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 460, 166, -1));
+        getContentPane().add(NAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 460, 284, 34));
+
+        delete.setFont(new java.awt.Font("Rockwell Condensed", 1, 48)); // NOI18N
+        delete.setText("DELETE");
+        delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteActionPerformed(evt);
+            }
+        });
+        getContentPane().add(delete, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 640, 270, 70));
+
+        delete1.setFont(new java.awt.Font("Rockwell Condensed", 1, 48)); 
+        delete1.setText("BACK");
+        delete1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delete1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(delete1, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 640, 270, 70));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\shrey\\Downloads\\SELVAA TRADERS (14).png")); 
+        jLabel1.setText("jLabel1");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        pack();
+    }
+
+    private void deleteActionPerformed(java.awt.event.ActionEvent evt) {                                       
+        // TODO add your handling code here:
+        String billno = NAME.getText();
+        if (billno.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter the material name  to delete.");
+            return;
+        }
+        String empId = null;
+
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete material: " + billno + "?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        String url = "jdbc:mysql://localhost:3306/SELVAA_TRADERS";
+        String dbUser = "root";
+        String dbPassword = "Shreyaanivas@09";
+
+        String sql = "DELETE FROM MATERIAL WHERE PRODUCT_NAME = ?";
+
+        try {
+            Connection conn;
+            conn = DriverManager.getConnection(url, dbUser, dbPassword);
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, billno);
+
+            int rowsDeleted = pst.executeUpdate();
+            if (rowsDeleted > 0) {
+                JOptionPane.showMessageDialog(this, "MATERIAL deleted successfully.");
+
+            } else {
+                JOptionPane.showMessageDialog(this, "No MATERIAL found : " + billno);
+            }
+
+            pst.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error deleting order: " + e.getMessage());
+        }
+    }                                      
+
+    private void delete1ActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        MATERIAL D= new MATERIAL();
+D.setVisible(true);  
+    }                                       
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ADD_MATERIAL.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ADD_MATERIAL.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ADD_MATERIAL.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ADD_MATERIAL.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new DEL_MATERIAL().setVisible(true);
+            }
+        });
+    }
+
+    private javax.swing.JTextField NAME;
+    private javax.swing.JButton delete;
+    private javax.swing.JButton delete1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
+}
+
+
+
+8.7.3 Display
+
+import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import java.sql.DriverManager;
+import java.sql.Connection;
+import javax.swing.table.DefaultTableModel;
+public class DISPLAY_MATERIAL extends javax.swing.JFrame {
+    public DISPLAY_MATERIAL() {
+        initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+    }
+    private void initComponents() {
+
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        FETCH = new javax.swing.JButton();
+        SEARCH = new javax.swing.JTextField();
+        FETCH1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "ID", "PRODUCT", "MATERIAL", "COST"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 330, 1185, 400));
+        FETCH.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); 
+        FETCH.setText("FETCH");
+        FETCH.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FETCHActionPerformed(evt);
+            }
+        });
+        getContentPane().add(FETCH, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 770, 130, 50));
+
+        SEARCH.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SEARCHActionPerformed(evt);
+            }
+        });
+        getContentPane().add(SEARCH, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 290, 460, -1));
+
+        FETCH1.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
+        FETCH1.setText("BACK");
+        FETCH1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FETCH1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(FETCH1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 770, 130, 50));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\shrey\\Downloads\\SELVAA TRADERS (14).png")); 
+        jLabel1.setText("jLabel1");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, -30, -1, -1));
+
+        pack();
+    }
+    private void FETCHActionPerformed(java.awt.event.ActionEvent evt) {                                      
+        String materialName = SEARCH.getText().trim(); 
+String url = "jdbc:mysql://localhost:3306/SELVAA_TRADERS";
+String dbUser = "root";
+String dbPassword = "Shreyaanivas@09";
+
+try {
+    Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
+    PreparedStatement pst;
+
+    if (materialName.isEmpty()) {
+        pst = conn.prepareStatement("SELECT * FROM MATERIAL");
+    } else {
+        pst = conn.prepareStatement("SELECT * FROM MATERIAL WHERE PRODUCT_NAME LIKE ?");
+        pst.setString(1, "%" + materialName + "%");
+    }
+
+    ResultSet rs = pst.executeQuery();
+    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+    model.setRowCount(0); 
+    boolean found = false;
+    while (rs.next()) {
+        found = true;
+        model.addRow(new Object[]{
+            rs.getString("PRODUCT_ID"),
+            rs.getString("PRODUCT_NAME"),
+            rs.getString("MATERIAL_NAME"),
+            rs.getString("MATERIAL_COST")
+             
+        });
+    }
+
+    if (!found && !materialName.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "No material found for: " + materialName);
+    }
+    rs.close();
+    pst.close();
+    conn.close();
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+}
+
+    }                                     
+
+    private void SEARCHActionPerformed(java.awt.event.ActionEvent evt) {                                       
+        
+    }                                      
+
+    private void FETCH1ActionPerformed(java.awt.event.ActionEvent evt) {                                       
+        MATERIAL D= new MATERIAL();
+        D.setVisible(true);  
+    }                                      
+    public static void main(String args[]) {
+        
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(DISPLAY_MATERIAL.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(DISPLAY_MATERIAL.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(DISPLAY_MATERIAL.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(DISPLAY_MATERIAL.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new DISPLAY_MATERIAL().setVisible(true);
+            }
+        });
+    }
+    private javax.swing.JButton FETCH;
+    private javax.swing.JButton FETCH1;
+    private javax.swing.JTextField SEARCH;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
+}
