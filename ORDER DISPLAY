@@ -1,0 +1,197 @@
+import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import java.sql.DriverManager;
+import java.sql.Connection;
+import javax.swing.table.DefaultTableModel;
+public class DISPLAY_ORDER extends javax.swing.JFrame {
+
+    public DISPLAY_ORDER() {
+        initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+    }
+    private void initComponents() {
+
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        FETCH = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
+        SEARCH = new javax.swing.JTextField();
+        BACK = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "BILL_NO", "DATE", "CUST_ID", "CUST_NAME", "PHONE NO", "PRODUCT_NAME", "MATERIAL", "PAGES", "COST_PER_PIECE", "TOTAL_COST", "ORDER_GIVEN", "SPECIFICATION"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        FETCH.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); 
+        FETCH.setForeground(new java.awt.Color(153, 102, 0));
+        FETCH.setText("FETCH");
+        FETCH.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FETCHActionPerformed(evt);
+            }
+        });
+        getContentPane().add(FETCH, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 770, 130, 50));
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "ORDER_NO", "DATE", "ORDER_NAME", "PRODUCT_NAME", "NO_OF_PRODUCTS", "DEADLINE", "TOTAL"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.Float.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(jTable2);
+
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 340, 1185, 400));
+
+        SEARCH.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SEARCHActionPerformed(evt);
+            }
+        });
+        getContentPane().add(SEARCH, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 300, 460, -1));
+
+        BACK.setFont(new java.awt.Font("Rockwell Condensed", 1, 24)); 
+        BACK.setForeground(new java.awt.Color(153, 102, 0));
+        BACK.setText("BACK");
+        BACK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BACKActionPerformed(evt);
+            }
+        });
+        getContentPane().add(BACK, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 780, 130, 50));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\shrey\\Downloads\\SELVAA TRADERS (7).png")); // NOI18N
+        jLabel1.setText("jLabel1");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 1620, 1120));
+
+        pack();
+    }
+
+    private void FETCHActionPerformed(java.awt.event.ActionEvent evt) {                                      
+        String url = "jdbc:mysql://localhost:3306/SELVAA_TRADERS";
+        String dbUser = "root";
+        String dbPassword = "Shreyaanivas@09";
+
+        try {
+            
+            Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT * FROM ORDERS";
+            ResultSet rs = stmt.executeQuery(sql);
+
+            DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+            model.setRowCount(0); // Clear existing rows before adding new data
+            while (rs.next()) {
+                String empId = rs.getString("ORDER_NO");
+                String name = rs.getString("DATE");
+                String phone = rs.getString("ORDER_NAME");
+                String email = rs.getString("PRODUCT_NAME");
+                String address = rs.getString("NO_OF_PRODUCTS");
+                String salary = rs.getString("DEADLINE");
+                String experience = rs.getString("TOTAL");
+                int empId = rs.getInt("ORDER_NO");
+                String name = rs.getString("DATE");
+                String phone = rs.getString("ORDER_NAME");
+                String email = rs.getString("PRODUCT_NAME");
+                int address = rs.getInt("NO_OF_PRODUCTS");
+                String salary = rs.getString("DEADLINE");
+                float experience = rs.getFloat("TOTAL");
+              
+                model.addRow(new Object[]{
+                    
+                    empId,
+                    name,
+                    phone,
+                    email,
+                    address,
+                    salary, 
+                    experience, 
+                    
+                });
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+    }                                     
+
+    private void SEARCHActionPerformed(java.awt.event.ActionEvent evt) {                                       
+
+    }                                      
+
+    private void BACKActionPerformed(java.awt.event.ActionEvent evt) {                                     
+        ORDERS ORD=new ORDERS();
+        ORD.setVisible(true);
+    }                                    
+
+    public static void main(String args[]) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(DISPLAY_ORDER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(DISPLAY_ORDER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(DISPLAY_ORDER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(DISPLAY_ORDER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new DISPLAY_ORDER().setVisible(true);
+            }
+        });
+    }
+    private javax.swing.JButton BACK;
+    private javax.swing.JButton FETCH;
+    private javax.swing.JTextField SEARCH;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
+}
+
