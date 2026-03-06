@@ -1,0 +1,193 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
+import javax.swing.JOptionPane;
+import java.sql.*;
+public class ADD_COURIER extends javax.swing.JFrame {
+    public ADD_COURIER() {
+        initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+    }
+
+    private void initComponents() {
+
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        courier_agency = new javax.swing.JTextField();
+        courier_charge = new javax.swing.JTextField();
+        parcel_name = new javax.swing.JTextField();
+        parcel_address = new javax.swing.JTextField();
+        INSERT = new javax.swing.JButton();
+        BACK = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(null);
+
+        jLabel5.setFont(new java.awt.Font("Serif", 3, 24));
+        jLabel5.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("AGENCY");
+        getContentPane().add(jLabel5);
+        jLabel5.setBounds(450, 430, 166, 32);
+
+        jLabel6.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel6.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("CHARGE");
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(450, 490, 166, 32);
+
+        jLabel7.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel7.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("NAME");
+        getContentPane().add(jLabel7);
+        jLabel7.setBounds(440, 560, 166, 32);
+
+        jLabel8.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel8.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("ADDRESS");
+        getContentPane().add(jLabel8);
+        jLabel8.setBounds(440, 630, 166, 32);
+        getContentPane().add(courier_agency);
+        courier_agency.setBounds(870, 430, 284, 34);
+        getContentPane().add(courier_charge);
+        courier_charge.setBounds(870, 500, 284, 34);
+        getContentPane().add(parcel_name);
+        parcel_name.setBounds(870, 570, 284, 34);
+        getContentPane().add(parcel_address);
+        parcel_address.setBounds(870, 640, 284, 34);
+
+        INSERT.setFont(new java.awt.Font("Rockwell Condensed", 1, 48)); 
+        INSERT.setForeground(new java.awt.Color(153, 102, 0));
+        INSERT.setText("INSERT");
+        INSERT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                INSERTActionPerformed(evt);
+            }
+        });
+        getContentPane().add(INSERT);
+        INSERT.setBounds(960, 740, 200, 60);
+
+        BACK.setFont(new java.awt.Font("Rockwell Condensed", 1, 48)); 
+        BACK.setForeground(new java.awt.Color(153, 102, 0));
+        BACK.setText("BACK");
+        BACK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BACKActionPerformed(evt);
+            }
+        });
+        getContentPane().add(BACK);
+        BACK.setBounds(430, 750, 200, 60);
+
+        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\shrey\\Downloads\\SELVAA TRADERS (10).png")); 
+        jLabel1.setText("jLabel1");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(-40, -40, 1590, 1160);
+
+        pack();
+    } 
+
+    private void INSERTActionPerformed(java.awt.event.ActionEvent evt) {                                       
+String courierAgency = courier_agency.getText().trim();
+    String courierChargeStr = courier_charge.getText().trim();
+    String parcelName = parcel_name.getText().trim();
+    String parcelAddress = parcel_address.getText().trim();
+    if (courierAgency.isEmpty() || courierChargeStr.isEmpty() || parcelName.isEmpty() || parcelAddress.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "All fields must be filled!");
+        return;
+    }
+    long courierCharge;
+    try {
+        courierCharge = Long.parseLong(courierChargeStr);
+        if (courierCharge <= 0) {
+            JOptionPane.showMessageDialog(this, "Courier charge must be a positive number!");
+            return;
+        }
+        if (courierChargeStr.startsWith("0")) {
+            JOptionPane.showMessageDialog(this, "Courier charge should not start with 0!");
+            return;
+        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Courier charge must be a valid number!");
+        return;
+    }
+    String url = "jdbc:mysql://localhost:3306/SELVAA_TRADERS";
+    String dbUser = "root";
+    String dbPassword = "Shreyaanivas@09";
+
+    String sql = "INSERT INTO courier (COURIER_AGENCY, COURIER_CHARGE, PARCEL_NAME, PARCEL_ADDRESS) VALUES (?, ?, ?, ?)";
+
+    try {
+        Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
+        PreparedStatement pst = conn.prepareStatement(sql);
+
+        pst.setString(1, courierAgency);
+        pst.setLong(2, courierCharge);
+        pst.setString(3, parcelName);
+        pst.setString(4, parcelAddress);
+
+        int rowsInserted = pst.executeUpdate();
+
+        if (rowsInserted > 0) {
+            JOptionPane.showMessageDialog(this, "Courier details inserted successfully!");
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to insert courier details.");
+        }
+
+        pst.close();
+        conn.close();
+    } 
+    catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "SQL Error: " + e.getMessage());
+    }
+    }                                      
+
+    private void BACKActionPerformed(java.awt.event.ActionEvent evt) {                                     
+        
+         COURIER HP=new COURIER();
+        HP.setVisible(true);      
+    }                                    
+
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ADD_COURIER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ADD_COURIER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ADD_COURIER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ADD_COURIER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ADD_COURIER().setVisible(true);
+            }
+        });
+    }
+
+    private javax.swing.JButton BACK;
+    private javax.swing.JButton INSERT;
+    private javax.swing.JTextField courier_agency;
+    private javax.swing.JTextField courier_charge;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JTextField parcel_address;
+    private javax.swing.JTextField parcel_name;
+}
+
