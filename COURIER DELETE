@@ -1,0 +1,132 @@
+import javax.swing.JOptionPane;
+import java.sql.DriverManager;
+import java.sql.*;
+import java.sql.Connection;
+public class DEL_COURIER extends javax.swing.JFrame {
+    public DEL_COURIER() {
+        initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+    }
+    private void initComponents() {
+
+        jLabel3 = new javax.swing.JLabel();
+        NAME = new javax.swing.JTextField();
+        delete = new javax.swing.JButton();
+        delete1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel3.setFont(new java.awt.Font("Serif", 3, 24)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("COURIER ID");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 470, 166, -1));
+        getContentPane().add(NAME, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 460, 284, 34));
+
+        delete.setFont(new java.awt.Font("Rockwell Condensed", 1, 48)); 
+        delete.setForeground(new java.awt.Color(153, 102, 0));
+        delete.setText("DELETE");
+        delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteActionPerformed(evt);
+            }
+        });
+        getContentPane().add(delete, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 650, 270, 70));
+
+        delete1.setFont(new java.awt.Font("Rockwell Condensed", 1, 48)); 
+        delete1.setForeground(new java.awt.Color(153, 102, 0));
+        delete1.setText("BACK");
+        delete1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delete1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(delete1, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 650, 270, 70));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\shrey\\Downloads\\SELVAA TRADERS (10).png")); // NOI18N
+        jLabel1.setText("jLabel1");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        pack();
+    } 
+
+    private void deleteActionPerformed(java.awt.event.ActionEvent evt) {                                       
+        String billno = NAME.getText();
+        if (billno.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter the COURIER ID  to delete.");
+            return;
+        }
+        String empId = null;
+
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to COURIER WITH THE ID : " + billno + "?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        String url = "jdbc:mysql://localhost:3306/SELVAA_TRADERS";
+        String dbUser = "root";
+        String dbPassword = "Shreyaanivas@09";
+
+        String sql = "DELETE FROM COURIER WHERE COURIER_NO = ?";
+
+        try {
+            Connection conn;
+            conn = DriverManager.getConnection(url, dbUser, dbPassword);
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, billno);
+
+            int rowsDeleted = pst.executeUpdate();
+            if (rowsDeleted > 0) {
+                JOptionPane.showMessageDialog(this, "COURIER ID deleted successfully.");
+
+            } else {
+                JOptionPane.showMessageDialog(this, "No COURIER found : " + billno);
+            }
+
+            pst.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error deleting TRANSACTION " + e.getMessage());
+        }
+    }                                      
+
+    private void delete1ActionPerformed(java.awt.event.ActionEvent evt) {                                        
+COURIER HP=new COURIER();
+        HP.setVisible(true);        
+    }                                       
+    public static void main(String args[]) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(DEL_COURIER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(DEL_COURIER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(DEL_COURIER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(DEL_COURIER.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new DEL_COURIER().setVisible(true);
+            }
+        });
+    }
+
+    private javax.swing.JTextField NAME;
+    private javax.swing.JButton delete;
+    private javax.swing.JButton delete1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
+    void setvisible(boolean b) {
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
+}
