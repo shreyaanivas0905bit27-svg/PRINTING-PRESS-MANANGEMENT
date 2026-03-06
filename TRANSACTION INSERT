@@ -1,0 +1,361 @@
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import javax.swing.JOptionPane;
+public class ADD_TRANSAC extends javax.swing.JFrame {
+    public ADD_TRANSAC() {
+        initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+    }
+    private void initComponents() {
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        order_no = new javax.swing.JTextField();
+        order_name = new javax.swing.JTextField();
+        customer_name = new javax.swing.JTextField();
+        total_amount = new javax.swing.JTextField();
+        sender_name = new javax.swing.JTextField();
+        phone_no = new javax.swing.JTextField();
+        date_of_transferred = new javax.swing.JTextField();
+        INSERT = new javax.swing.JButton();
+        INSERT1 = new javax.swing.JButton();
+        BACK = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(null);
+        jLabel4.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel4.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("PRODUCT  NAME");
+        getContentPane().add(jLabel4);
+        jLabel4.setBounds(370, 400, 210, 32);
+        jLabel5.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel5.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("CUSTOMER NAME");
+        getContentPane().add(jLabel5);
+        jLabel5.setBounds(370, 460, 220, 32);
+        jLabel6.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel6.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("TOTAL AMOUNT");
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(370, 520, 210, 32);
+        jLabel7.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel7.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("SENDER");
+        getContentPane().add(jLabel7);
+        jLabel7.setBounds(380, 580, 166, 32);
+        jLabel8.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel8.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("PHONE NO");
+        getContentPane().add(jLabel8);
+        jLabel8.setBounds(390, 640, 166, 32);
+        jLabel10.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel10.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setText("DATE");
+        getContentPane().add(jLabel10);
+        jLabel10.setBounds(380, 710, 166, 32);
+        jLabel12.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel12.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setText("BILL NO");
+        getContentPane().add(jLabel12);
+        jLabel12.setBounds(370, 340, 166, 32);
+        order_no.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                order_noActionPerformed(evt);
+            }
+        });
+        getContentPane().add(order_no);
+        order_no.setBounds(840, 340, 284, 34);
+        getContentPane().add(order_name);
+        order_name.setBounds(840, 400, 284, 34);
+        getContentPane().add(customer_name);
+        customer_name.setBounds(840, 460, 284, 34);
+        getContentPane().add(total_amount);
+        total_amount.setBounds(840, 520, 284, 34);
+        getContentPane().add(sender_name);
+        sender_name.setBounds(840, 580, 284, 34);
+        getContentPane().add(phone_no);
+        phone_no.setBounds(840, 650, 284, 34);
+        getContentPane().add(date_of_transferred);
+        date_of_transferred.setBounds(840, 710, 284, 34);
+        INSERT.setFont(new java.awt.Font("Rockwell Condensed", 1, 48)); 
+        INSERT.setForeground(new java.awt.Color(153, 102, 0));
+        INSERT.setText("INSERT");
+        INSERT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                INSERTActionPerformed(evt);
+            }
+        });
+        getContentPane().add(INSERT);
+        INSERT.setBounds(350, 800, 240, 60);
+        INSERT1.setFont(new java.awt.Font("Rockwell Condensed", 1, 18)); 
+        INSERT1.setForeground(new java.awt.Color(153, 102, 0));
+        INSERT1.setText("FETCH");
+        INSERT1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                INSERT1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(INSERT1);
+        INSERT1.setBounds(1190, 330, 160, 30);
+        BACK.setFont(new java.awt.Font("Rockwell Condensed", 1, 48)); 
+        BACK.setForeground(new java.awt.Color(153, 102, 0));
+        BACK.setText("BACK");
+        BACK.setActionCommand("");
+        BACK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BACKActionPerformed(evt);
+            }
+        });
+        getContentPane().add(BACK);
+        BACK.setBounds(900, 800, 240, 60);
+        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\shrey\\Downloads\\SELVAA TRADERS (4).png")); // NOI18N
+        jLabel2.setText("jLabel2");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(-40, -60, 1610, 1200);
+
+        pack();
+    }
+
+    private void INSERTActionPerformed(java.awt.event.ActionEvent evt) {                                       
+String orderName = order_name.getText();
+String custName = customer_name.getText();
+String totalAmount = total_amount.getText();
+String senderName = sender_name.getText();
+String phoneNo = phone_no.getText();
+String transferredTo = transferred_to.getText();
+String dateOfTransferred = date_of_transferred.getText(); 
+String url = "jdbc:mysql://localhost:3306/SELVAA_TRADERS";
+String dbUser = "root";
+String dbPassword = "Shreyaanivas@09";
+String sql = "INSERT INTO TRANSACTIONS (ORDER_NO, ORDER_NAME, CUST_NAME, TOTAL_AMOUNT, SENDER_NAME, PHONE_NO, TRANSFERRED_TO, DATE_OF_TRANSFERRED) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+try {
+    Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
+    PreparedStatement pst = conn.prepareStatement(sql);
+    pst.setLong(1, Long.parseLong(orderNo));
+    pst.setString(2, orderName);
+    pst.setString(3, custName);
+    pst.setBigDecimal(4, new BigDecimal(totalAmount));
+    pst.setString(5, senderName);
+    pst.setLong(6, Long.parseLong(phoneNo));
+    pst.setString(7, transferredTo);
+    pst.setDate(8, java.sql.Date.valueOf(dateOfTransferred)); 
+    int rowsInserted = pst.executeUpdate();
+    if (rowsInserted > 0) {
+        JOptionPane.showMessageDialog(this, "TRANSACTIONS details inserted successfully!");
+    } else {
+        JOptionPane.showMessageDialog(this, "Failed to insert transACTION details.");
+    }
+    pst.close();
+    conn.close();
+
+} catch (Exception e) {
+    e.printStackTrace();
+    JOptionPane.showMessageDialog(this, "SQL Error: " + e.getMessage());
+}String orderNo = order_no.getText();
+    String orderName = order_name.getText();
+    String custName = customer_name.getText();
+    String totalAmount = total_amount.getText();
+    String senderName = sender_name.getText();
+    String phoneNo = phone_no.getText();
+    String dateOfTransferred = date_of_transferred.getText(); 
+    String url = "jdbc:mysql://localhost:3306/SELVAA_TRADERS";
+    String dbUser = "root";
+    String dbPassword = "Shreyaanivas@09";
+    String checkSql = "SELECT COUNT(*) FROM TRANSACTIONS WHERE ORDER_NO = ?";
+    
+    try (Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
+         PreparedStatement checkPst = conn.prepareStatement(checkSql)) {
+        checkPst.setLong(1, Long.parseLong(orderNo));
+        var rs = checkPst.executeQuery();
+        if (rs.next() && rs.getInt(1) > 0) {
+            JOptionPane.showMessageDialog(this, "Order No " + orderNo + " already exists! Please enter a unique order number.");
+            return; 
+        }
+        String checkSales = "SELECT STATUS FROM SALES WHERE BILL_NO = ?";
+        try (PreparedStatement checkSalesStmt = conn.prepareStatement(checkSales)) {
+            checkSalesStmt.setLong(1, Long.parseLong(orderNo));
+            var r = checkSalesStmt.executeQuery();
+            if (r.next()) {
+                String status = r.getString("STATUS");
+                if (!"PENDING".equalsIgnoreCase(status)) {
+                    JOptionPane.showMessageDialog(this, "Order No " + orderNo + " is not in PENDING status.");
+                    return;
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Order No " + orderNo + " not found in SALES table.");
+                return;
+            }
+        }
+        String sql = "INSERT INTO TRANSACTIONS (ORDER_NO, ORDER_NAME, CUST_NAME, TOTAL_AMOUNT, SENDER_NAME, PHONE_NO, DATE_OF_TRANSFERRED) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setLong(1, Long.parseLong(orderNo));
+            pst.setString(2, orderName);
+            pst.setString(3, custName);
+            pst.setBigDecimal(4, new BigDecimal(totalAmount));
+            pst.setString(5, senderName);
+            pst.setLong(6, Long.parseLong(phoneNo));
+            pst.setDate(7, java.sql.Date.valueOf(dateOfTransferred)); // Ensure date format is correct
+            int rowsInserted = pst.executeUpdate();
+            if (rowsInserted > 0) {
+                String updateSales = "UPDATE SALES SET STATUS = 'COMPLETED' WHERE BILL_NO = ?";
+                try (PreparedStatement updateStmt = conn.prepareStatement(updateSales)) {
+                    updateStmt.setLong(1, Long.parseLong(orderNo));
+                    updateStmt.executeUpdate();
+                }
+                JOptionPane.showMessageDialog(this, "Transaction inserted and status updated to COMPLETED!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to insert transaction.");
+            }
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "SQL Error: " + e.getMessage());
+    }
+            
+    }                                      
+
+    private void order_noActionPerformed(java.awt.event.ActionEvent evt) {                                         
+      
+    }                                        
+
+    private void INSERT1ActionPerformed(java.awt.event.ActionEvent evt) {                                        
+          autofillFields();
+    }                                       
+
+    private void BACKActionPerformed(java.awt.event.ActionEvent evt) {                                    
+        TRANSACTIONS e = new TRANSACTIONS();
+        e.setVisible(true);
+    }                                    
+private void autofillFields() {
+        if (orderNo.isEmpty()) {
+            return;
+        }
+        String url = "jdbc:mysql://localhost:3306/SELVAA_TRADERS";
+        String dbUser = "root";
+        String dbPassword = "Shreyaanivas@09";
+        String sql = "SELECT PRODUCT_NAME, CUST_NAME, TOTAL_COST, PHONE_NO, DATE FROM SALES WHERE BILL_NO = ?";
+        try (Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
+             PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setLong(1, Long.parseLong(orderNo));
+            var rs = pst.executeQuery();
+            if (rs.next()) {
+                order_name.setText(rs.getString("PRODUCT_NAME"));
+                customer_name.setText(rs.getString("CUST_NAME"));
+                total_amount.setText(rs.getString("TOTAL_COST"));
+                phone_no.setText(rs.getString("PHONE_NO"));
+                 LocalDate currentDate = LocalDate.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                date_of_transferred.setText(currentDate.format(formatter));   
+                sender_name.setText("");
+            } else {
+                JOptionPane.showMessageDialog(this, "No Order Found with Order No: " + orderNo);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+    }
+    
+   String orderNo = order_no.getText();
+
+    if (orderNo.isEmpty()) {
+        return;
+    }
+
+    String url = "jdbc:mysql://localhost:3306/SELVAA_TRADERS";
+    String dbUser = "root";
+    String dbPassword = "Shreyaanivas@09";
+
+    String sql = "SELECT PRODUCT_NAME, CUST_NAME, TOTAL_COST, PHONE_NO, DATE, STATUS FROM SALES WHERE BILL_NO = ?";
+
+    try (Connection conn = DriverManager.getConnection(url, dbUser, dbPassword);
+         PreparedStatement pst = conn.prepareStatement(sql)) {
+
+        pst.setLong(1, Long.parseLong(orderNo));
+        var rs = pst.executeQuery();
+
+        if (rs.next()) {
+            String status = rs.getString("STATUS");
+            if (!status.equalsIgnoreCase("Pending")) {
+                JOptionPane.showMessageDialog(this, "Transaction already completed for Order No: " + orderNo);
+                return;
+            }
+
+            order_name.setText(rs.getString("PRODUCT_NAME"));
+            customer_name.setText(rs.getString("CUST_NAME"));
+            total_amount.setText(rs.getString("TOTAL_COST"));
+            phone_no.setText(rs.getString("PHONE_NO"));
+
+            LocalDate currentDate = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            date_of_transferred.setText(currentDate.format(formatter));
+
+            sender_name.setText("");  
+        } else {
+            JOptionPane.showMessageDialog(this, "No Order Found with Order No: " + orderNo);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+    }
+}
+    public static void main(String args[]) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ADD_TRANSAC.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ADD_TRANSAC.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ADD_TRANSAC.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ADD_TRANSAC.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ADD_TRANSAC().setVisible(true);
+            }
+        });
+    }
+    private javax.swing.JButton BACK;
+    private javax.swing.JButton INSERT;
+    private javax.swing.JButton INSERT1;
+    private javax.swing.JTextField customer_name;
+    private javax.swing.JTextField date_of_transferred;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JTextField order_name;
+    private javax.swing.JTextField order_no;
+    private javax.swing.JTextField phone_no;
+    private javax.swing.JTextField sender_name;
+    private javax.swing.JTextField total_amount;
+}
