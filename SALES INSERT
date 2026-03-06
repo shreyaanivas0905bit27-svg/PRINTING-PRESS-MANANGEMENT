@@ -1,0 +1,567 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
+import javax.swing.*;
+import java.awt.event.*;
+import java.sql.*;
+public class ADD_SALES extends javax.swing.JFrame {
+
+    public ADD_SALES() {
+        
+       initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        bill_date.setText(java.time.LocalDate.now().toString());
+    bill_date.setEditable(false);      
+
+    generateBillNumber();             
+    bill_no.setEditable(false); 
+    loadProductNames();
+    populateProductOptions();
+    
+    };
+private void populateProductOptions() {
+    String[] productOptions = {
+        "SMALL",
+        "REGULAR",
+        "BIG",
+        "360 PAGES",
+        "270 PAGES",
+        "12 SHEET",
+        "6 SHEET"
+    };
+    SPECIC.setModel(new javax.swing.DefaultComboBoxModel<>(productOptions));
+    SPECIC.setSelectedItem("SMALL");
+}
+
+void fetchCostPerPiece() {
+    String product = (String) product_name.getSelectedItem();
+    String material = (String) material_name.getSelectedItem();
+    if (product == null || material == null) return;
+
+    try {
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SELVAA_TRADERS", "root", "Shreyaanivas@09");
+        PreparedStatement pst = conn.prepareStatement("SELECT MATERIAL_COST FROM MATERIAL WHERE PRODUCT_NAME=? AND MATERIAL=?");
+        pst.setString(1, product);
+        pst.setString(2, material);
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+            cost_per_piece.setText(String.valueOf(rs.getDouble("MATERIAL_COST")));
+        } else {
+            cost_per_piece.setText("");
+        }
+        conn.close();
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error fetching cost: " + e.getMessage());
+    }
+}
+private void generateBillNumber() {
+    try {
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SELVAA_TRADERS", "root", "Shreyaanivas@09");
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT MAX(BILL_NO) FROM SALES");
+        int next = 1;
+        if (rs.next() && rs.getString(1) != null) {
+            next = Integer.parseInt(rs.getString(1)) + 1;
+        }
+        bill_no.setText(String.valueOf(next));
+        conn.close();
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error generating bill no: " + e.getMessage());
+    }
+}
+private void loadProductNames() {
+    try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SELVAA_TRADERS", "root", "Shreyaanivas@09");
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery("SELECT DISTINCT PRODUCT_NAME FROM MATERIAL")) {
+
+        product_name.removeAllItems();
+        while (rs.next()) {
+            product_name.addItem(rs.getString("PRODUCT_NAME"));
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error loading product names: " + e.getMessage());
+    }
+}
+private void loadMaterialsForProduct(String selectedProduct) {
+    try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SELVAA_TRADERS", "root", "Shreyaanivas@09");
+         PreparedStatement pst = conn.prepareStatement("SELECT DISTINCT MATERIAL_NAME FROM MATERIAL WHERE PRODUCT_NAME = ?")) {
+
+        pst.setString(1, selectedProduct);
+        ResultSet rs = pst.executeQuery();
+
+        material_name.removeAllItems();
+        while (rs.next()) {
+            material_name.addItem(rs.getString("MATERIAL_NAME"));
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error loading materials: " + e.getMessage());
+    }
+}
+private void fetchMaterialCost() {
+    String selectedProduct = (String) product_name.getSelectedItem();
+    String selectedMaterial = (String) material_name.getSelectedItem();
+    if (selectedProduct == null || selectedMaterial == null) return;
+
+    try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SELVAA_TRADERS", "root", "Shreyaanivas@09");
+         PreparedStatement pst = conn.prepareStatement("SELECT MATERIAL_COST FROM MATERIAL WHERE PRODUCT_NAME = ? AND MATERIAL_NAME = ?")) {
+
+        pst.setString(1, selectedProduct);
+        pst.setString(2, selectedMaterial);
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) {
+            cost_per_piece.setText(String.valueOf(rs.getDouble("MATERIAL_COST")));
+        } else {
+            cost_per_piece.setText("");
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error fetching cost: " + e.getMessage());
+    }
+}
+
+    private void initComponents() {
+
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        bill_date = new javax.swing.JTextField();
+        cust_id = new javax.swing.JTextField();
+        cust_name = new javax.swing.JTextField();
+        phone_no = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        SPECIC = new javax.swing.JComboBox<>();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        total_cost = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        bill_no = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        gst = new javax.swing.JTextField();
+        quantity = new javax.swing.JTextField();
+        product_name = new javax.swing.JComboBox<>();
+        material_name = new javax.swing.JComboBox<>();
+        cost_per_piece = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
+        pending = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(null);
+
+        jLabel7.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel7.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("GST");
+        getContentPane().add(jLabel7);
+        jLabel7.setBounds(450, 410, 166, 32);
+
+        jLabel8.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel8.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("CUST ID");
+        getContentPane().add(jLabel8);
+        jLabel8.setBounds(460, 350, 166, 32);
+
+        jLabel9.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel9.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel9.setText("CUST NAME");
+        getContentPane().add(jLabel9);
+        jLabel9.setBounds(480, 260, 166, 32);
+
+        jLabel10.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel10.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setText("PHONE NO");
+        getContentPane().add(jLabel10);
+        jLabel10.setBounds(470, 470, 166, 32);
+
+        jLabel11.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel11.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel11.setText("PRODUCT_NAME");
+        getContentPane().add(jLabel11);
+        jLabel11.setBounds(470, 510, 220, 32);
+
+        jLabel12.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel12.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setText("MATERIAL");
+        getContentPane().add(jLabel12);
+        jLabel12.setBounds(460, 550, 166, 32);
+
+        bill_date.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bill_dateActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bill_date);
+        bill_date.setBounds(810, 300, 284, 40);
+
+        cust_id.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cust_idActionPerformed(evt);
+            }
+        });
+        getContentPane().add(cust_id);
+        cust_id.setBounds(810, 350, 284, 40);
+
+        cust_name.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cust_nameFocusLost(evt);
+            }
+        });
+        getContentPane().add(cust_name);
+        cust_name.setBounds(810, 250, 284, 40);
+        getContentPane().add(phone_no);
+        phone_no.setBounds(810, 460, 284, 40);
+
+        jButton1.setFont(new java.awt.Font("Rockwell Condensed", 1, 48)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(153, 102, 0));
+        jButton1.setText("INSERT");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1);
+        jButton1.setBounds(820, 830, 270, 59);
+
+        SPECIC.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SMALL", "REGULAR ", "BIG ", "360 PAGES ", "270 PAGES ", "12 SHEET ", "6 SHEET" }));
+        getContentPane().add(SPECIC);
+        SPECIC.setBounds(810, 690, 310, 40);
+
+        jLabel16.setFont(new java.awt.Font("Serif", 3, 24)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel16.setText("COST PER PIECE");
+        getContentPane().add(jLabel16);
+        jLabel16.setBounds(460, 640, 220, 32);
+
+        jLabel18.setFont(new java.awt.Font("Serif", 3, 24)); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel18.setText("SPECIFIC");
+        getContentPane().add(jLabel18);
+        jLabel18.setBounds(460, 700, 166, 32);
+
+        jLabel19.setFont(new java.awt.Font("Serif", 3, 24)); // NOI18N
+        jLabel19.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel19.setText("QUANTITY");
+        getContentPane().add(jLabel19);
+        jLabel19.setBounds(450, 590, 166, 32);
+
+        total_cost.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                total_costActionPerformed(evt);
+            }
+        });
+        getContentPane().add(total_cost);
+        total_cost.setBounds(810, 690, 310, 40);
+
+        jLabel13.setFont(new java.awt.Font("Serif", 3, 24)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel13.setText("DATE");
+        getContentPane().add(jLabel13);
+        jLabel13.setBounds(470, 300, 166, 32);
+
+        bill_no.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bill_noActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bill_no);
+        bill_no.setBounds(810, 200, 284, 40);
+
+        jLabel14.setFont(new java.awt.Font("Serif", 3, 24)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel14.setText("BILL NO");
+        getContentPane().add(jLabel14);
+        jLabel14.setBounds(470, 210, 166, 32);
+
+        gst.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gstActionPerformed(evt);
+            }
+        });
+        getContentPane().add(gst);
+        gst.setBounds(810, 400, 284, 40);
+
+        quantity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quantityActionPerformed(evt);
+            }
+        });
+        getContentPane().add(quantity);
+        quantity.setBounds(810, 580, 310, 40);
+        product_name.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        product_name.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                product_nameActionPerformed(evt);
+            }
+        });
+        getContentPane().add(product_name);
+        product_name.setBounds(810, 510, 300, 22);
+        material_name.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        material_name.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                material_nameActionPerformed(evt);
+            }
+        });
+        getContentPane().add(material_name);
+        material_name.setBounds(810, 550, 300, 22);
+
+        cost_per_piece.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cost_per_pieceActionPerformed(evt);
+            }
+        });
+        getContentPane().add(cost_per_piece);
+        cost_per_piece.setBounds(810, 630, 310, 40);
+
+        jButton2.setFont(new java.awt.Font("Rockwell Condensed", 1, 48)); 
+        jButton2.setForeground(new java.awt.Color(153, 102, 0));
+        jButton2.setText("BACK");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2);
+        jButton2.setBounds(450, 840, 270, 59);
+        pending.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pendingActionPerformed(evt);
+            }
+        });
+        getContentPane().add(pending);
+        pending.setBounds(810, 740, 310, 40);
+        jLabel20.setFont(new java.awt.Font("Serif", 3, 24)); 
+        jLabel20.setForeground(new java.awt.Color(153, 102, 0));
+        jLabel20.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel20.setText("STATUS");
+        getContentPane().add(jLabel20);
+        jLabel20.setBounds(460, 750, 166, 32);
+
+        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\shrey\\Downloads\\SELVAA TRADERS (15).png")); // NOI18N
+        jLabel2.setText("jLabel2");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(0, -20, 1661, 1079);
+
+        pack();
+    }                      
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    String billNo = bill_no.getText();
+    String billDate = bill_date.getText();
+    String custId = cust_id.getText();
+    String custName = cust_name.getText();
+    String phoneNo = phone_no.getText();
+    String gstNo = gst.getText();
+    String productName = (String) product_name.getSelectedItem();
+    String materialName = (String) material_name.getSelectedItem();
+    String costText = cost_per_piece.getText();
+    String quantityText = quantity.getText(); 
+    double grandTotalWithAdditional = 0;
+    String status=pending.getText();
+    if (billDate.isEmpty() || custId.isEmpty() || custName.isEmpty() || phoneNo.isEmpty()
+            || productName == null || materialName == null || costText.isEmpty() || quantityText.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please fill in all required fields.");
+        return;
+    }
+
+    try {
+        int quantity = Integer.parseInt(quantityText);
+        double costPerPiece = Double.parseDouble(costText);
+        double totalCost = quantity * costPerPiece;
+        grandTotalWithAdditional = totalCost + 5630;
+
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SELVAA_TRADERS", "root", "Shreyaanivas@09");
+        PreparedStatement checkStmt = conn.prepareStatement("SELECT BILL_NO FROM SALES WHERE BILL_NO = ?");
+        checkStmt.setString(1, billNo);
+        ResultSet rs = checkStmt.executeQuery();
+        if (rs.next()) {
+            JOptionPane.showMessageDialog(this, "Duplicate BILL NO. Record already exists.");
+            rs.close();
+            checkStmt.close();
+            conn.close();
+            return;
+        }
+        String sql = "INSERT INTO SALES (BILL_NO, DATE, CUST_ID, CUST_NAME, PHONE_NO, PRODUCT_NAME, MATERIAL,PAGES, COST_PER_PIECE, TOTAL_COST, ORDER_SPECIFICATION, GST_NO, GRAND_TOTAL,status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        PreparedStatement pst = conn.prepareStatement(sql);
+        pst.setString(1, billNo);
+        pst.setString(2, billDate);
+        pst.setString(3, custId);
+        pst.setString(4, custName);
+        pst.setString(5, phoneNo);
+        pst.setString(6, productName);
+        pst.setString(7, materialName);
+        pst.setString(8, quantityText);
+        pst.setString(9, costText);
+        pst.setDouble(10, totalCost);
+        pst.setString(11, ""); // Order Specification placeholder
+        pst.setString(12, gstNo);
+        pst.setDouble(13, grandTotalWithAdditional);
+         pst.setString(14,status);   
+
+        int inserted = pst.executeUpdate();
+        if (inserted > 0) {
+            JOptionPane.showMessageDialog(this, "Sales record inserted successfully.");
+        } else {
+            JOptionPane.showMessageDialog(this, "Insert failed.");
+        }
+
+        pst.close();
+        conn.close();
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Invalid number format in quantity or cost.");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error inserting sales record: " + e.getMessage());
+        e.printStackTrace();
+    }
+    
+   
+
+    }                                        
+
+    private void bill_dateActionPerformed(java.awt.event.ActionEvent evt) {                                          
+
+    }                                         
+
+    private void bill_noActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        
+    }                                       
+
+    private void gstActionPerformed(java.awt.event.ActionEvent evt) {                                    
+        
+    }                                   
+
+    private void total_costActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        // TODO add your handling code here:
+    }                                          
+
+    private void cust_nameFocusLost(java.awt.event.FocusEvent evt) {                                    
+        
+    String name = cust_name.getText().trim();
+    if (name.isEmpty()) return;
+
+    try {
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/SELVAA_TRADERS", "root", "Shreyaanivas@09");
+        PreparedStatement pst = conn.prepareStatement("SELECT ID, PHONE_NO, GST FROM COUSTMER WHERE NAME = ?");
+        pst.setString(1, name);
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+            cust_id.setText(rs.getString("ID"));
+            phone_no.setText(rs.getString("PHONE_NO"));
+            gst.setText(rs.getString("GST"));
+        } else {
+            cust_id.setText("");
+            phone_no.setText("");
+            gst.setText("");
+            JOptionPane.showMessageDialog(null, "Customer not found.");
+        }
+        conn.close();
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Error fetching customer: " + e.getMessage());
+    }
+
+    }                                   
+
+    private void product_nameActionPerformed(java.awt.event.ActionEvent evt) {                                             
+      String selectedProduct = (String) product_name.getSelectedItem();
+    if (selectedProduct != null) {
+        loadMaterialsForProduct(selectedProduct);
+    }
+    }                                            
+
+    private void material_nameActionPerformed(java.awt.event.ActionEvent evt) {                                              
+        
+       fetchMaterialCost();
+    }                                             
+
+    private void quantityActionPerformed(java.awt.event.ActionEvent evt) {                                         
+
+    }                                        
+
+    private void cost_per_pieceActionPerformed(java.awt.event.ActionEvent evt) {                                               
+        
+    }                                              
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        SALES S= new SALES();
+S.setVisible(true); 
+    }                                        
+
+    private void cust_idActionPerformed(java.awt.event.ActionEvent evt) {                                        
+    }                                       
+
+    private void pendingActionPerformed(java.awt.event.ActionEvent evt) {                                        
+    }                                       
+    public static void main(String args[]) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ADD_SALES.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ADD_SALES.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ADD_SALES.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ADD_SALES.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ADD_SALES().setVisible(true);
+            }
+        });
+}
+    private javax.swing.JComboBox<String> SPECIC;
+    private javax.swing.JTextField bill_date;
+    private javax.swing.JTextField bill_no;
+    private javax.swing.JTextField cost_per_piece;
+    private javax.swing.JTextField cust_id;
+    private javax.swing.JTextField cust_name;
+    private javax.swing.JTextField gst;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JComboBox<String> material_name;
+    private javax.swing.JTextField pending;
+    private javax.swing.JTextField phone_no;
+    private javax.swing.JComboBox<String> product_name;
+    private javax.swing.JTextField quantity;
+    private javax.swing.JTextField total_cost;
+    
+}
+
+
+
+
+
