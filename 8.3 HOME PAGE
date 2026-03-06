@@ -1,0 +1,209 @@
+
+
+public class HOMEPAGE extends javax.swing.JFrame {
+
+    public HOMEPAGE() {
+        initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+    }
+    private void initComponents() {
+
+        EMPLOYEES_DETAILS = new javax.swing.JButton();
+        ORDER_DETAILS = new javax.swing.JButton();
+        SALES_DETAIILS = new javax.swing.JButton();
+        TRANSACTIONS_DETAILS = new javax.swing.JButton();
+        MATERIAL_DETAILS = new javax.swing.JButton();
+        COURIER_DETAILS = new javax.swing.JButton();
+        TRANSACTIONS_DETAILS1 = new javax.swing.JButton();
+        TRANSACTIONS_DETAILS2 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(null);
+
+        EMPLOYEES_DETAILS.setFont(new java.awt.Font("Script MT Bold", 2, 24)); 
+        EMPLOYEES_DETAILS.setForeground(new java.awt.Color(153, 102, 0));
+        EMPLOYEES_DETAILS.setText(" Employees ");
+        EMPLOYEES_DETAILS.setFocusCycleRoot(true);
+        EMPLOYEES_DETAILS.setHideActionText(true);
+        EMPLOYEES_DETAILS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EMPLOYEES_DETAILSActionPerformed(evt);
+            }
+        });
+        getContentPane().add(EMPLOYEES_DETAILS);
+        EMPLOYEES_DETAILS.setBounds(720, 620, 192, 40);
+
+        ORDER_DETAILS.setFont(new java.awt.Font("Script MT Bold", 2, 24)); // NOI18N
+        ORDER_DETAILS.setForeground(new java.awt.Color(153, 102, 0));
+        ORDER_DETAILS.setText("Order");
+        ORDER_DETAILS.setFocusCycleRoot(true);
+        ORDER_DETAILS.setHideActionText(true);
+        ORDER_DETAILS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ORDER_DETAILSActionPerformed(evt);
+            }
+        });
+        getContentPane().add(ORDER_DETAILS);
+        ORDER_DETAILS.setBounds(720, 520, 192, 36);
+
+        SALES_DETAIILS.setFont(new java.awt.Font("Script MT Bold", 2, 24)); // NOI18N
+        SALES_DETAIILS.setForeground(new java.awt.Color(153, 102, 0));
+        SALES_DETAIILS.setText("Sales");
+        SALES_DETAIILS.setFocusCycleRoot(true);
+        SALES_DETAIILS.setHideActionText(true);
+        SALES_DETAIILS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SALES_DETAIILSActionPerformed(evt);
+            }
+        });
+        getContentPane().add(SALES_DETAIILS);
+        SALES_DETAIILS.setBounds(720, 570, 192, 36);
+
+        TRANSACTIONS_DETAILS.setFont(new java.awt.Font("Script MT Bold", 2, 24)); // NOI18N
+        TRANSACTIONS_DETAILS.setForeground(new java.awt.Color(153, 102, 0));
+        TRANSACTIONS_DETAILS.setText("Transactions");
+        TRANSACTIONS_DETAILS.setFocusCycleRoot(true);
+        TRANSACTIONS_DETAILS.setHideActionText(true);
+        TRANSACTIONS_DETAILS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TRANSACTIONS_DETAILSActionPerformed(evt);
+            }
+        });
+        getContentPane().add(TRANSACTIONS_DETAILS);
+        TRANSACTIONS_DETAILS.setBounds(720, 420, 192, 36);
+
+        MATERIAL_DETAILS.setFont(new java.awt.Font("Script MT Bold", 2, 24)); // NOI18N
+        MATERIAL_DETAILS.setForeground(new java.awt.Color(153, 102, 0));
+        MATERIAL_DETAILS.setText("Product");
+        MATERIAL_DETAILS.setFocusCycleRoot(true);
+        MATERIAL_DETAILS.setHideActionText(true);
+        MATERIAL_DETAILS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MATERIAL_DETAILSActionPerformed(evt);
+            }
+        });
+        getContentPane().add(MATERIAL_DETAILS);
+        MATERIAL_DETAILS.setBounds(720, 470, 192, 36);
+
+        COURIER_DETAILS.setFont(new java.awt.Font("Script MT Bold", 2, 24)); // NOI18N
+        COURIER_DETAILS.setForeground(new java.awt.Color(153, 102, 0));
+        COURIER_DETAILS.setText("Courier");
+        COURIER_DETAILS.setFocusCycleRoot(true);
+        COURIER_DETAILS.setHideActionText(true);
+        COURIER_DETAILS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                COURIER_DETAILSActionPerformed(evt);
+            }
+        });
+        getContentPane().add(COURIER_DETAILS);
+        COURIER_DETAILS.setBounds(720, 670, 192, 36);
+
+        TRANSACTIONS_DETAILS1.setFont(new java.awt.Font("Script MT Bold", 2, 24)); // NOI18N
+        TRANSACTIONS_DETAILS1.setForeground(new java.awt.Color(153, 102, 0));
+        TRANSACTIONS_DETAILS1.setText("Coustmer");
+        TRANSACTIONS_DETAILS1.setFocusCycleRoot(true);
+        TRANSACTIONS_DETAILS1.setHideActionText(true);
+        TRANSACTIONS_DETAILS1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TRANSACTIONS_DETAILS1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(TRANSACTIONS_DETAILS1);
+        TRANSACTIONS_DETAILS1.setBounds(720, 720, 192, 36);
+
+        TRANSACTIONS_DETAILS2.setFont(new java.awt.Font("Script MT Bold", 2, 24)); 
+        TRANSACTIONS_DETAILS2.setForeground(new java.awt.Color(153, 102, 0));
+        TRANSACTIONS_DETAILS2.setText("bill");
+        TRANSACTIONS_DETAILS2.setFocusCycleRoot(true);
+        TRANSACTIONS_DETAILS2.setHideActionText(true);
+        TRANSACTIONS_DETAILS2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TRANSACTIONS_DETAILS2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(TRANSACTIONS_DETAILS2);
+        TRANSACTIONS_DETAILS2.setBounds(720, 770, 192, 36);
+
+        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\shrey\\Downloads\\SELVAA TRADERS (16).png")); // NOI18N
+        jLabel1.setText("jLabel1");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(0, -20, 1580, 1130);
+
+        pack();
+    }                        
+
+    private void EMPLOYEES_DETAILSActionPerformed(java.awt.event.ActionEvent evt) {                                                  
+        EMPLOYEE EMP = new EMPLOYEE();
+            EMP.setVisible(true);
+    }                                                 
+
+    private void ORDER_DETAILSActionPerformed(java.awt.event.ActionEvent evt) {                                              
+       ORDERS ORD =new ORDERS();
+       ORD.setVisible(true);
+       
+    }                                             
+
+    private void SALES_DETAIILSActionPerformed(java.awt.event.ActionEvent evt) {                                               
+        SALES S = new SALES();
+        S.setVisible(true);    
+    }                                              
+
+    private void TRANSACTIONS_DETAILSActionPerformed(java.awt.event.ActionEvent evt) {                                                     
+        
+        TRANSACTIONS S = new TRANSACTIONS();
+        S.setVisible(true); 
+    }                                                    
+
+    private void MATERIAL_DETAILSActionPerformed(java.awt.event.ActionEvent evt) {                                                
+         MATERIAL M = new MATERIAL();
+        M.setVisible(true); 
+    }                                                
+
+    private void COURIER_DETAILSActionPerformed(java.awt.event.ActionEvent evt) {                                                
+         COURIER V = new COURIER();
+        V.setVisible(true); 
+    }                                               
+
+    private void TRANSACTIONS_DETAILS1ActionPerformed(java.awt.event.ActionEvent evt) {                                                     
+        NewJFrame NF=new NewJFrame();
+        NF.setVisible(true);
+    }                                                     
+
+    private void TRANSACTIONS_DETAILS2ActionPerformed(java.awt.event.ActionEvent evt) {                                                      
+        bill b=new bill();
+        b.setVisible(true);
+    }                                                     
+    public static void main(String args[]) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(HOMEPAGE.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(HOMEPAGE.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(HOMEPAGE.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(HOMEPAGE.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new HOMEPAGE().setVisible(true);
+            }
+        });
+    }
+    private javax.swing.JButton COURIER_DETAILS;
+    private javax.swing.JButton EMPLOYEES_DETAILS;
+    private javax.swing.JButton MATERIAL_DETAILS;
+    private javax.swing.JButton ORDER_DETAILS;
+    private javax.swing.JButton SALES_DETAIILS;
+    private javax.swing.JButton TRANSACTIONS_DETAILS;
+    private javax.swing.JButton TRANSACTIONS_DETAILS1;
+    private javax.swing.JButton TRANSACTIONS_DETAILS2;
+    private javax.swing.JLabel jLabel1;
+}
