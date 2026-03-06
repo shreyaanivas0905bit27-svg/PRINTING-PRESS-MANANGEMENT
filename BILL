@@ -1,0 +1,496 @@
+import com.itextpdf.text.Image;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
+import java.sql.ResultSet;
+import javax.swing.table.DefaultTableModel;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import javax.swing.JOptionPane;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.util.Properties;
+
+
+public class bill extends javax.swing.JFrame {
+
+    private TrayIcon trayIcon;
+    
+    public bill() {
+        
+        initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        loadProductNames();
+        generateBillNumber();
+        setupTrayIcon();
+    }
+    
+    int  billCounter = 1;  
+
+  private void generateBillNumber() {
+    BILLNO.setText(String.valueOf(billCounter));
+    billCounter++;
+    
+}
+    private void loadProductNames() {
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SELVAA_TRADERS", "root", "Shreyaanivas@09");
+            String sql = "SELECT PRODUCT_NAME FROM MATERIAL";
+            PreparedStatement pst = con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                productComboBox.addItem(rs.getString("PRODUCT_NAME"));
+            }
+            rs.close();
+            pst.close();
+            con.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error loading products: " + e.getMessage());
+        }
+    }
+private void calculateGrandTotal() {
+    DefaultTableModel model = (DefaultTableModel) j1.getModel();
+    float sum = 0f;
+    for (int i = 0; i < model.getRowCount(); i++) {
+        Object value = model.getValueAt(i, 4);
+        if (value != null) {
+            sum += Float.parseFloat(value.toString());
+        }
+    }
+    t1.setText(String.format("%.2f", sum));
+    
+    float finalAmount = sum;
+    if (sum > 100) {
+        finalAmount += 5630; // Add 5630 extra
+    }
+    t2.setText(String.format("%.2f", finalAmount));*/
+    DefaultTableModel model = (DefaultTableModel) j1.getModel();
+float sum = 0f;
+for (int i = 0; i < model.getRowCount(); i++) {
+    Object value = model.getValueAt(i, 5);  // Get the value in the 4th column (rupee)
+    if (value != null) {
+        try {
+            sum += Float.parseFloat(value.toString());  
+        } catch (NumberFormatException e) {
+            System.out.println("Error parsing value: " + value);
+        }
+    }
+}
+t1.setText(String.format("%.2f", sum));  
+float finalAmount = sum;
+if (sum > 100) {
+    finalAmount += 5630;  
+}
+t2.setText(String.format("%.2f", finalAmount));  
+}
+private void setupTrayIcon() {
+    if (SystemTray.isSupported()) {
+        try {
+            SystemTray tray = SystemTray.getSystemTray();
+            java.awt.Image image = Toolkit.getDefaultToolkit().createImage(getClass().getResource("Resources/icon.png"));
+            trayIcon = new TrayIcon(image, "Selvaa Traders App");
+            trayIcon.setImageAutoSize(true);
+            trayIcon.setToolTip("Selvaa Traders App");
+            tray.add(trayIcon);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+public void showNotification(String title, String message) {
+    if (trayIcon != null) {
+        trayIcon.displayMessage(title, message, TrayIcon.MessageType.INFO);
+    }
+}
+    private void initComponents() {
+
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        S1 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        BILLNO = new javax.swing.JTextField();
+        BILLDATE = new javax.swing.JTextField();
+        S12 = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        j1 = new javax.swing.JTable();
+        jLabel9 = new javax.swing.JLabel();
+        S2 = new javax.swing.JTextField();
+        t2 = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        customerIdField = new javax.swing.JTextField();
+        GENERATE = new javax.swing.JButton();
+        jLabel18 = new javax.swing.JLabel();
+        t1 = new javax.swing.JTextField();
+        jLabel19 = new javax.swing.JLabel();
+        ADD = new javax.swing.JButton();
+        productComboBox = new java.awt.Choice();
+        jButton2 = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI Light", 1, 48)); 
+        jLabel1.setText("SELVAA TRADERS");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 40, 409, -1));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI Semibold", 1, 36)); 
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("INVOICE");
+        jLabel2.setToolTipText("");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 0, 199, -1));
+
+        S1.setFont(new java.awt.Font("Segoe UI Emoji", 1, 18)); 
+        S1.setText("TO:");
+        S1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        S1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        getContentPane().add(S1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 370, 130));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI Emoji", 1, 18)); 
+        jLabel5.setText("DATE:");
+        jLabel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 100, 90, 50));
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI Emoji", 1, 18)); 
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("GST NO: 33BRMPS6614J1ZD");
+        jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 0, 310, 50));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI Emoji", 1, 18)); 
+        jLabel7.setText("GST 18%");
+        jLabel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 740, 80, 50));
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI Emoji", 1, 18)); 
+        jLabel8.setText("PRODUCT NAME");
+        jLabel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 270, 150, 47));
+
+        BILLNO.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BILLNOActionPerformed(evt);
+            }
+        });
+        getContentPane().add(BILLNO, new org.netbeans.lib.awtextra.AbsoluteConstraints(1300, 50, 220, 50));
+        getContentPane().add(BILLDATE, new org.netbeans.lib.awtextra.AbsoluteConstraints(1300, 100, 220, 50));
+
+        S12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                S12ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(S12, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 370, 110));
+
+        j1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "S NO", "PRODUCT CODE", "PARTICULARS", "QUANTITY", "RATE", "RUPEE"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Float.class, java.lang.Float.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(j1);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 340, 1080, 210));
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI Emoji", 1, 18)); 
+        jLabel9.setText("CUSTOMER ID:");
+        jLabel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 130, 47));
+        getContentPane().add(S2, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 130, 290, 50));
+        getContentPane().add(t2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 740, 270, 50));
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI Emoji", 1, 18)); 
+        jLabel11.setText("TOTAL:");
+        jLabel11.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 640, 80, 50));
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); 
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("(Quality Offset Printing,Gravure and Polybag Printing)");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 100, 570, 30));
+        jLabel4.getAccessibleContext().setAccessibleName("6/742,C-2,KAMARAJAPURAM COLONY ,SATCHIYAPURAM,SIVAKASI WEST-626124\n EMAIL:vselvaa0771@gmail.com,selvaatraders2017@gmail.com");
+
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); 
+        jLabel14.setText("  EMAIL:vselvaa0771@gmail.com,selvaatraders2017@gmail.com");
+        getContentPane().add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 150, 560, 20));
+
+        jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); 
+        jLabel15.setText("6/742 C-2,KAMARAJAPURAM COLONY,SATCHIYAPURAM,SIVAKASI WEST-626 124");
+        getContentPane().add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 110, 580, 60));
+
+        jLabel16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/selvaa traders.png"))); 
+        jLabel16.setText("jLabel16");
+        getContentPane().add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 30, 200, 80));
+
+        jLabel17.setFont(new java.awt.Font("Segoe UI Emoji", 1, 18)); 
+        jLabel17.setText("GST NO:");
+        jLabel17.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        getContentPane().add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 80, 50));
+        getContentPane().add(customerIdField, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 180, 240, 50));
+
+        GENERATE.setText("GENERATE");
+        GENERATE.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GENERATEActionPerformed(evt);
+            }
+        });
+        getContentPane().add(GENERATE, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 230, -1, -1));
+
+        jLabel18.setFont(new java.awt.Font("Segoe UI Emoji", 1, 18));         jLabel18.setText("TOTAL +");
+        jLabel18.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        getContentPane().add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 740, 80, 50));
+        getContentPane().add(t1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 640, 270, 50));
+
+        jLabel19.setFont(new java.awt.Font("Segoe UI Emoji", 1, 18)); 
+        jLabel19.setText("BILL NO:");
+        jLabel19.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        getContentPane().add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(1210, 50, 90, 47));
+
+        ADD.setText("ADD");
+        ADD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ADDActionPerformed(evt);
+            }
+        });
+        getContentPane().add(ADD, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 280, 90, -1));
+        getContentPane().add(productComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 260, 190, 60));
+
+        jButton2.setText("GENERATE THE BILL");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 580, 160, 40));
+
+        pack();
+    } 
+
+    private void BILLNOActionPerformed(java.awt.event.ActionEvent evt) {                                       
+        
+    }                                      
+
+    private void S12ActionPerformed(java.awt.event.ActionEvent evt) {                                    
+        
+    }                                   
+
+    private void GENERATEActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        String customerId = customerIdField.getText();
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SELVAA_TRADERS", "root", "Shreyaanivas@09");
+            String sql = "SELECT * FROM COUSTMER WHERE ID = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, customerId);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                S12.setText(rs.getString("NAME"));
+                S2.setText(rs.getString("GST"));
+            } else {
+                JOptionPane.showMessageDialog(this, "Customer not found!");
+            }
+            rs.close();
+            pst.close();
+            con.close();
+            LocalDate today = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            BILLDATE.setText(today.format(formatter));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error fetching customer details: " + e.getMessage());
+        }
+
+    }                                        
+
+    private void ADDActionPerformed(java.awt.event.ActionEvent evt) {                                    
+        String productName = (String) productComboBox.getSelectedItem();
+        if (productName == null || productName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please select a product!");
+            return;
+        }
+
+        try {
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/SELVAA_TRADERS", "root", "Shreyaanivas@09");
+            String sql = "SELECT * FROM MATERIAL WHERE PRODUCT_NAME = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, productName);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                float rate = rs.getFloat("MATERIAL_COST");
+                int product = rs.getInt("PRODUCT_ID");
+                String quantityStr = JOptionPane.showInputDialog(this, "Enter Quantity:");
+                if (quantityStr == null || quantityStr.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Quantity is required!");
+                    return;
+                }
+                int quantity = Integer.parseInt(quantityStr);
+                float rupee = rate * quantity;
+                  
+                DefaultTableModel model = (DefaultTableModel) j1.getModel();
+                 int sno = j1.getRowCount() + 1; 
+                model.addRow(new Object[]{ sno,product,productName, quantity, rate, rupee});
+               
+            } else {
+                JOptionPane.showMessageDialog(this, "Product not found!");
+            }
+            rs.close();
+            pst.close();
+            con.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error fetching product details: " + e.getMessage());
+        }
+    
+    }                                   
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        calculateGrandTotal();
+        String filePath = null;
+        try {
+        java.awt.Rectangle rect = this.getBounds();
+        java.awt.image.BufferedImage img = new java.awt.image.BufferedImage(rect.width, rect.height, java.awt.image.BufferedImage.TYPE_INT_RGB);
+        this.paint(img.getGraphics());
+        javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
+        fileChooser.setDialogTitle("Save Bill as PDF");
+        int userSelection = fileChooser.showSaveDialog(this);
+
+        if (userSelection == javax.swing.JFileChooser.APPROVE_OPTION) {
+            java.io.File fileToSave = fileChooser.getSelectedFile();
+            filePath = fileToSave.getAbsolutePath();
+            if (!filePath.endsWith(".pdf")) {
+                filePath += ".pdf";
+            }
+            com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+            com.itextpdf.text.pdf.PdfWriter.getInstance(document, new java.io.FileOutputStream(filePath));
+            document.open();
+            java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+            javax.imageio.ImageIO.write(img, "png", baos);
+            com.itextpdf.text.Image image = com.itextpdf.text.Image.getInstance(baos.toByteArray());
+            image.scaleToFit(document.getPageSize().getWidth() - 20, document.getPageSize().getHeight() - 20);
+            image.setAlignment(com.itextpdf.text.Image.ALIGN_CENTER);
+            document.add(image);
+            document.close();
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Bill saved successfully as PDF!");
+            showNotification("Bill Saved", "Your bill has been generated and saved successfully.");
+        }
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        javax.swing.JOptionPane.showMessageDialog(this, "Error saving PDF: " + ex.getMessage());
+    }
+String recipientEmail = javax.swing.JOptionPane.showInputDialog(this, "Enter recipient email address:");
+
+if (recipientEmail != null && !recipientEmail.trim().isEmpty()) {
+    final String senderEmail = "shreyaanivasan09@gmail.com";
+    final String senderPassword = "yfgo stuv awta vsit"; 
+
+    java.util.Properties props = new java.util.Properties();
+    props.put("mail.smtp.auth", "true");
+    props.put("mail.smtp.starttls.enable", "true");
+    props.put("mail.smtp.host", "smtp.gmail.com");
+    props.put("mail.smtp.port", "587");
+
+    javax.mail.Session session = javax.mail.Session.getInstance(props,
+        new javax.mail.Authenticator() {
+            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
+                return new javax.mail.PasswordAuthentication(senderEmail, senderPassword);
+            }
+        });
+
+    try {
+        javax.mail.Message message = new javax.mail.internet.MimeMessage(session);
+        message.setFrom(new javax.mail.internet.InternetAddress(senderEmail));
+        message.setRecipients(javax.mail.Message.RecipientType.TO, javax.mail.internet.InternetAddress.parse(recipientEmail));
+        message.setSubject("Your Bill PDF");
+        javax.mail.Multipart multipart = new javax.mail.internet.MimeMultipart();
+        javax.mail.BodyPart messageBodyPart = new javax.mail.internet.MimeBodyPart();
+        messageBodyPart.setText("Please find your bill attached.");
+        multipart.addBodyPart(messageBodyPart);
+        javax.mail.BodyPart attachmentPart = new javax.mail.internet.MimeBodyPart();
+        javax.activation.DataSource source = new javax.activation.FileDataSource(filePath);
+        attachmentPart.setDataHandler(new javax.activation.DataHandler(source));
+        attachmentPart.setFileName(new java.io.File(filePath).getName());
+
+        multipart.addBodyPart(attachmentPart);
+
+        message.setContent(multipart);
+
+        javax.mail.Transport.send(message);
+        javax.swing.JOptionPane.showMessageDialog(this, "Bill sent successfully to " + recipientEmail);
+    } catch (Exception e) {
+        e.printStackTrace();
+        javax.swing.JOptionPane.showMessageDialog(this, "Failed to send email: " + e.getMessage());
+    }
+}
+    }                                        
+    public static void main(String args[]) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+java.util.logging.Logger.getLogger(bill.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {          java.util.logging.Logger.getLogger(bill.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {   java.util.logging.Logger.getLogger(bill.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {        java.util.logging.Logger.getLogger(bill.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new bill().setVisible(true);
+            }
+        });
+    }
+    private javax.swing.JButton ADD;
+    private javax.swing.JTextField BILLDATE;
+    private javax.swing.JTextField BILLNO;
+    private javax.swing.JButton GENERATE;
+    private javax.swing.JLabel S1;
+    private javax.swing.JTextField S12;
+    private javax.swing.JTextField S2;
+    private javax.swing.JTextField customerIdField;
+    private javax.swing.JTable j1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private java.awt.Choice productComboBox;
+    private javax.swing.JTextField t1;
+    private javax.swing.JTextField t2;
+}
